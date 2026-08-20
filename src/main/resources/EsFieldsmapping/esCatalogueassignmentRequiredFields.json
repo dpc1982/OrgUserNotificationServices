@@ -1,0 +1,26 @@
+{
+  "catalogueAssignmentId": {
+    "type": "keyword"
+  },
+  "departmentId": {
+    "type": "keyword"
+  },
+  "catalogueId": {
+    "type": "keyword"
+  },
+  "status": {
+    "type": "keyword"
+  },
+  "assignedOn": {
+    "type": "date"
+  },
+  "removedOn": {
+    "type": "date"
+  },
+  "createdOn": {
+    "type": "date"
+  },
+  "updatedOn": {
+    "type": "date"
+  }
+}

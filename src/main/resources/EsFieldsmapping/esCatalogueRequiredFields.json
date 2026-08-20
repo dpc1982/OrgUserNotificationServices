@@ -1,0 +1,32 @@
+{
+  "catalogueId": {
+    "type": "keyword"
+  },
+  "catalogueCode": {
+    "type": "keyword"
+  },
+  "name": {
+    "type": "keyword"
+  },
+  "description": {
+    "type": "text"
+  },
+  "catalogueType": {
+    "type": "keyword"
+  },
+  "approvalWorkflow": {
+    "type": "keyword"
+  },
+  "active": {
+    "type": "boolean"
+  },
+  "status": {
+    "type": "keyword"
+  },
+  "createdOn": {
+    "type": "date"
+  },
+  "updatedOn": {
+    "type": "date"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "catalogueAssignmentId": {
+      "type": "string",
+      "prefix": "ca-",
+      "key": "Primary",
+      "keyLength": 12,
+      "readOnly": true,
+      "description": "System primary key, framework convention."
+    },
+    "departmentId": {
+      "type": "string",
+      "description": "Reference to the assigned department."
+    },
+    "catalogueId": {
+      "type": "string",
+      "description": "Reference to the assigned catalogue."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Removed"
+      ],
+      "description": "INFERRED, no explicit PRD lifecycle table for this entity (see earlier notes)."
+    },
+    "assignedOn": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "removedOn": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "departmentId",
+    "catalogueId"
+  ],
+  "additionalProperties": false,
+  "notes": [
+    "Field names updated from departmentCode/catalogueCode to departmentId/catalogueId to match the corrected reference convention."
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "catalogueId": {
+      "type": "string",
+      "prefix": "cat-",
+      "key": "Primary",
+      "keyLength": 12,
+      "readOnly": true,
+      "description": "System primary key, framework convention. See departmentId note re: two-field PK pattern."
+    },
+    "catalogueCode": {
+      "type": "string",
+      "readOnly": true,
+      "description": "Human-facing code shown in the UI (wireframe: 'CAT-TRD-01', 'CAT-2026-001'). Auto-generated, unique, read-only after creation."
+    },
+    "name": {
+      "type": "string",
+      "description": "Catalogue name (wireframe 'Catalogue Name', e.g. Farmer, Crop, Livestock)."
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional (wireframe 'Description')."
+    },
+    "catalogueType": {
+      "type": "string",
+      "enum": [
+        "Registry",
+        "Catalogue"
+      ],
+      "description": "ADDED -- discovered from the wireframe's 'Type' column/dropdown (wireframe listing: 'Farmer' = Registry, 'Crop'/'Livestock'/'Location'/'Seed'/'Season'/'Water Source'/'Pesticide' = Catalogue). Not present in the PRD text; meaning of the Registry/Catalogue distinction (e.g. does Registry point to a service-owned entity like Farmer while Catalogue points to a shared reference list in agri-catalogue-service?) should be confirmed with the team."
+    },
+    "approvalWorkflow": {
+      "type": "string",
+      "enum": [
+        "No-Level Approval",
+        "Two-Level Approval"
+      ],
+      "description": "CHANGED label from 'No Approval' to 'No-Level Approval' to match the wireframe's exact UI copy ('No-Level Approval' / 'Two-Level Approval', Roles: Maker only / Maker -> Approval L1 -> Approval L2)."
+    },
+    "active": {
+      "type": "boolean",
+      "description": "Wireframe shows a simple 'Active' toggle on the Add/Edit form, separate from the lifecycle 'status' below."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Active",
+        "Inactive"
+      ],
+      "description": "PRD Epic 2.1, 2.5; wireframe listing 'Status' column shows Active/Inactive."
+    },
+    "createdOn": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedOn": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "name",
+    "catalogueType",
+    "approvalWorkflow"
+  ],
+  "additionalProperties": false,
+  "notes": [
+    "'Total Departments' shown on the wireframe's View Catalogue Details screen is a computed count from catalogueAssignment records, not a stored field here.",
+    "Both an 'active' boolean toggle and a 'status' lifecycle enum appear on the wireframe -- these may be redundant with the framework's own generic maker-checker status. Flag with the team; possibly 'active' should be dropped in favour of status alone."
+  ]
+}

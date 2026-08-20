@@ -102,6 +102,24 @@ public class Constants{
     public static final String ORG_ID_RQST = "orgId";
     public static final String ORG_INDEX_NAME = "org_index";
 
+    
+    // Department Specific Constants
+    public static final String DEPARTMENT_VALIDATION_FILE_JSON = "/payloadValidation/departmentPayloadValidation.json";
+    public static final String DEPARTMENT_ID_RQST = "departmentId";
+    public static final String DEPARTMENT_INDEX_NAME = "department_index";
+
+    
+    // Catalogue Specific Constants
+    public static final String CATALOGUE_VALIDATION_FILE_JSON = "/payloadValidation/cataloguePayloadValidation.json";
+    public static final String CATALOGUE_ID_RQST = "catalogueId";
+    public static final String CATALOGUE_INDEX_NAME = "catalogue_index";
+
+    
+    // Catalogueassignment Specific Constants
+    public static final String CATALOGUEASSIGNMENT_VALIDATION_FILE_JSON = "/payloadValidation/catalogueassignmentPayloadValidation.json";
+    public static final String CATALOGUEASSIGNMENT_ID_RQST = "catalogueassignmentId";
+    public static final String CATALOGUEASSIGNMENT_INDEX_NAME = "catalogueassignment_index";
+
         private Constants() {
     }
 }
