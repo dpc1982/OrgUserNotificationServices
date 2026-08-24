@@ -82,7 +82,7 @@ public class NotificationTemplateRequest {
         return status;
     }
 
-    public void setStatus(String description) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }
