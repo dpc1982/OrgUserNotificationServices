@@ -13,17 +13,15 @@
             "type": "string",
             "description": "Organisation name"
         },
-        "type": {
+
+        "department_type": {
             "type": "string",
-            "description": "Organisation type, e.g. Government Department, NGO, Research Institute"
+            "description": "Department, e.g. Horticulture, Soil Science, Plant Pathology"
         },
+
         "location": {
             "type": "string",
             "description": "Location-mapping id referencing the separate location-mapping catalogue (not yet linked)"
-        },
-        "department": {
-            "type": "string",
-            "description": "Department, e.g. Horticulture, Soil Science, Plant Pathology"
         },
         "address": {
             "type": "string",

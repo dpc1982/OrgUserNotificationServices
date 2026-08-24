@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "departmentTypeId": {
+      "type": "string",
+      "prefix": "depttype-",
+      "key": "Primary",
+      "keyLength": 12,
+      "readOnly": true,
+      "description": "System-generated unique identifier for the Department Type record."
+    },
+    "departmentCode": {
+      "type": "string",
+      "readOnly": true,
+      "description": "Human-facing Department Code associated with the Department Type. Auto-generated, unique, stored uppercase, and read-only after creation."
+    },
+    "departmentType": {
+      "type": "string",
+      "description": "Department Type name, such as Agricultural, Seed Production, Research, Distribution, or Processing."
+    },
+    "departmentName": {
+      "type": "string",
+      "description": "Name of the department associated with this Department Type."
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional free-text description of the Department Type."
+    }
+  },
+  "required": [
+    "departmentCode",
+    "departmentType",
+    "departmentName"
+  ],
+  "additionalProperties": false
+}

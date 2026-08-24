@@ -1,0 +1,17 @@
+{
+  "departmentTypeId": {
+    "type": "keyword"
+  },
+  "departmentCode": {
+    "type": "keyword"
+  },
+  "departmentType": {
+    "type": "keyword"
+  },
+  "departmentName": {
+    "type": "keyword"
+  },
+  "description": {
+    "type": "text"
+  }
+}
