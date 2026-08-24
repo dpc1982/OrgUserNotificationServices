@@ -8,9 +8,9 @@
     "location": {
         "type": "keyword"
     },
-    "department": {
-        "type": "keyword"
-    },
+    "department_type": {
+        "type": "string"
+  },
     "address": {
         "type": "keyword"
     },
