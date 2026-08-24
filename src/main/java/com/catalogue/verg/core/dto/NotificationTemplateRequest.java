@@ -12,6 +12,7 @@ public class NotificationTemplateRequest {
     private String templateContent;
     private JsonNode templateVariables;
     private String description;
+    private String status;
 
     public String getTemplateCode() {
         return templateCode;
@@ -75,5 +76,13 @@ public class NotificationTemplateRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String description) {
+        this.status = status;
     }
 }

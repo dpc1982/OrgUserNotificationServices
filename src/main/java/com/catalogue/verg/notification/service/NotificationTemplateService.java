@@ -78,6 +78,10 @@ public class NotificationTemplateService {
                 request.getTemplateVariables()
         );
 
+        template.setStatus(
+                request.getStatus()
+        );
+
         template.setIsEnabled(true);
         template.setIsDeleted(false);
 
@@ -184,6 +188,10 @@ public class NotificationTemplateService {
 
         template.setUpdatedAt(
                 LocalDateTime.now()
+        );
+
+        template.setStatus(
+                request.getStatus()
         );
 
         NotificationTemplate updatedTemplate =
