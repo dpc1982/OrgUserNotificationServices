@@ -35,6 +35,7 @@ public interface NotificationTemplateRepository
                 OR LOWER(n.templateName) LIKE LOWER(CONCAT('%', :search, '%'))
                 OR LOWER(n.templateModule) LIKE LOWER(CONCAT('%', :search, '%'))
                 OR LOWER(n.notificationChannel) LIKE LOWER(CONCAT('%', :search, '%'))
+                OR LOWER(n.status) LIKE LOWER(CONCAT('%', :search, '%'))
             )
             """)
     Page<NotificationTemplate> searchTemplates(
