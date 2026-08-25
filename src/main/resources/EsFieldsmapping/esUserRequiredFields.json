@@ -1,56 +1,85 @@
 {
-    "firstName": {
+  "userCode": {
+    "type": "keyword"
+  },
+  "firstName": {
+    "type": "keyword"
+  },
+  "lastName": {
+    "type": "keyword"
+  },
+  "dateOfBirth": {
+    "type": "date"
+  },
+  "gender": {
+    "type": "keyword"
+  },
+  "email": {
+    "type": "keyword"
+  },
+  "phoneNumber": {
+    "type": "keyword"
+  },
+  "orgId": {
+    "type": "keyword"
+  },
+  "departmentName": {
+    "type": "keyword"
+  },
+  "entityType": {
+    "type": "keyword"
+  },
+  "region": {
+    "type": "keyword"
+  },
+  "zone": {
+    "type": "keyword"
+  },
+  "woreda": {
+    "type": "keyword"
+  },
+  "kebele": {
+    "type": "keyword"
+  },
+  "createdBy": {
+    "type": "keyword"
+  },
+  "updatedBy": {
+    "type": "keyword"
+  },
+  "password": {
+    "type": "text"
+  },
+  "pin": {
+    "type": "text"
+  },
+  "passwordExpiresOn": {
+    "type": "date"
+  },
+  "pinExpiresOn": {
+    "type": "date"
+  },
+  "status": {
+    "type": "keyword"
+  },
+  "createdOn": {
+    "type": "date"
+  },
+  "updatedOn": {
+    "type": "date"
+  },
+  "registry": {
+    "type": "nested",
+    "properties": {
+      "catalogueId": {
         "type": "keyword"
-    },
-    "lastName": {
+      },
+      "functionalRoleId": {
         "type": "keyword"
-    },
-    "dateOfBirth": {
-        "type": "date"
-    },
-    "gender": {
+      },
+      "displayName": {
         "type": "keyword"
-    },
-    "email": {
-        "type": "keyword"
-    },
-    "phoneNumber": {
-        "type": "keyword"
-    },
-    "orgId": {
-        "type": "keyword"
-    },
-    "departmentName": {
-        "type": "keyword"
-    },
-    "entityType": {
-        "type": "keyword"
-    },
-    "createdBy": {
-        "type": "keyword"
-    },
-    "updatedBy": {
-        "type": "keyword"
-    },
-    "password": {
-        "type": "text"
-    },
-    "pin": {
-        "type": "text"
-    },
-    "passwordExpiresOn": {
-        "type": "date"
-    },
-    "pinExpiresOn": {
-        "type": "date"
-    },
-    "status": {
-        "type": "keyword"
-    },
-    "createdOn": {
-        "type": "date"
-    },
-    "updatedOn": {
-        "type": "date"
+      }
     }
+  }
 }

@@ -1,85 +1,141 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "properties": {
-        "userId": {
-            "type": "string",
-            "prefix": "user-",
-            "key": "Primary",
-            "keyLength": 12,
-            "description": "Auto-generated primary key (user-<12 digits>)"
-        },
-        "firstName": {
-            "type": "string",
-            "description": "Given name"
-        },
-        "lastName": {
-            "type": "string",
-            "description": "Family name"
-        },
-        "dateOfBirth": {
-            "type": "string",
-            "description": "Date of birth as an RFC 3339 full-date (yyyy-MM-dd, zero-padded); a time component is rejected",
-            "format": "date"
-        },
-        "gender": {
-            "type": "string",
-            "description": "Gender; free string validated against the shared reference list at the caller layer"
-        },
-        "email": {
-            "type": "string",
-            "description": "Email address"
-        },
-        "phoneNumber": {
-            "type": "string",
-            "description": "Contact phone number"
-        },
-        "orgId": {
-            "type": "string",
-            "description": "Organisation id this user belongs to (org catalogue reference)"
-        },
-        "departmentName": {
-            "type": "string",
-            "description": "Department the user belongs to, e.g. Horticulture, Soil Science, Plant Pathology"
-        },
-        "entityType": {
-            "type": "string",
-            "description": "User category; free string validated against the shared reference list at the caller layer"
-        },
-        "password": {
-            "type": "string",
-            "description": "Hashed password (hashed by the portal backend before submission; source of truth)"
-        },
-        "pin": {
-            "type": "string",
-            "description": "Hashed PIN (hashed by the portal backend before submission; source of truth)"
-        },
-        "passwordExpiresOn": {
-            "type": "string",
-            "description": "RFC 3339 date-time the password expires; UTC offset is mandatory (e.g. 2026-08-19T10:15:30Z)",
-            "format": "date-time"
-        },
-        "pinExpiresOn": {
-            "type": "string",
-            "description": "RFC 3339 date-time the PIN expires; UTC offset is mandatory (e.g. 2026-08-19T10:15:30Z)",
-            "format": "date-time"
-        },
-        "createdBy": {
-            "type": "string",
-            "description": "User id of the creator (set by the portal/auth layer)"
-        },
-        "updatedBy": {
-            "type": "string",
-            "description": "User id of the last updater (set by the portal/auth layer)"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "prefix": "user-",
+      "key": "Primary",
+      "keyLength": 12,
+      "description": "Auto-generated primary key (user-<12 digits>)"
     },
-    "required": [
-        "firstName",
-        "lastName",
-        "email",
-        "orgId",
-        "entityType",
-        "password",
-        "pin"
-    ]
+    "userCode": {
+      "type": "string",
+      "readOnly": true,
+      "description": "ADDED (from Add User UI). Human-facing unique user code shown on the Add User screen (e.g. ET-0981). Auto-generated, unique, read-only after creation -- mirrors the departmentCode pattern used on other catalogues in this project."
+    },
+    "firstName": {
+      "type": "string",
+      "description": "Given name"
+    },
+    "lastName": {
+      "type": "string",
+      "description": "Family name"
+    },
+    "dateOfBirth": {
+      "type": "string",
+      "description": "Date of birth as an RFC 3339 full-date (yyyy-MM-dd, zero-padded); a time component is rejected",
+      "format": "date"
+    },
+    "gender": {
+      "type": "string",
+      "description": "Gender; free string validated against the shared reference list at the caller layer"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "phoneNumber": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "orgId": {
+      "type": "string",
+      "description": "Organisation id this user belongs to (org catalogue reference)"
+    },
+    "departmentName": {
+      "type": "string",
+      "description": "Department the user belongs to, e.g. Horticulture, Soil Science, Plant Pathology"
+    },
+    "entityType": {
+      "type": "string",
+      "description": "User category; free string validated against the shared reference list at the caller layer"
+    },
+    "password": {
+      "type": "string",
+      "description": "Hashed password (hashed by the portal backend before submission; source of truth)"
+    },
+    "pin": {
+      "type": "string",
+      "description": "Hashed PIN (hashed by the portal backend before submission; source of truth)"
+    },
+    "passwordExpiresOn": {
+      "type": "string",
+      "description": "RFC 3339 date-time the password expires; UTC offset is mandatory (e.g. 2026-08-19T10:15:30Z)",
+      "format": "date-time"
+    },
+    "pinExpiresOn": {
+      "type": "string",
+      "description": "RFC 3339 date-time the PIN expires; UTC offset is mandatory (e.g. 2026-08-19T10:15:30Z)",
+      "format": "date-time"
+    },
+    "region": {
+      "type": "string",
+      "description": "ADDED (from Add User UI 'Coverage Selection'). Region the user's coverage area belongs to -- top level of the Ethiopia location hierarchy (Region > Zone > Woreda > Kebele). ASSUMPTION: stored as the selected region name/value from the Location Hierarchy master; switch to a regionId catalogue reference if that master exposes ids."
+    },
+    "zone": {
+      "type": "string",
+      "description": "ADDED (from Add User UI 'Coverage Selection'). Zone within the selected region, second level of the location hierarchy. Depends on region."
+    },
+    "woreda": {
+      "type": "string",
+      "description": "ADDED (from Add User UI 'Coverage Selection'). Woreda within the selected zone, third level of the location hierarchy. Depends on zone."
+    },
+    "kebele": {
+      "type": "string",
+      "description": "ADDED (from Add User UI 'Coverage Selection'). Kebele within the selected woreda, most granular level of the location hierarchy. Depends on woreda."
+    },
+    "createdBy": {
+      "type": "string",
+      "description": "User id of the creator (set by the portal/auth layer)"
+    },
+    "updatedBy": {
+      "type": "string",
+      "description": "User id of the last updater (set by the portal/auth layer)"
+    },
+    "registry": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "catalogueId": {
+            "type": "string",
+            "description": "Reference to the catalogue this functional role is granted on (catalogue catalogue reference, e.g. cat-001)."
+          },
+          "functionalRoleId": {
+            "type": "string",
+            "enum": [
+              "maker",
+              "checker1",
+              "checker2"
+            ],
+            "description": "Fixed functional role for this catalogue. ASSUMPTION: enum values taken literally from the sample payload provided (maker/checker1/checker2). If this is meant to line up with the canonical MAKER/APPROVAL_L1/APPROVAL_L2 codes used elsewhere in this project's functionalRoleAssignment entity, confirm whether these should be the same three values under different casing/naming, or are genuinely a separate, simpler enum scoped only to this embedded registry array."
+          },
+          "displayName": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional display label for this specific catalogue/role grant (e.g. 'FIELD_OFFICER'). Nullable -- sample payload shows null for checker1/checker2 entries, only the maker entry has a value."
+          }
+        },
+        "required": [
+          "catalogueId",
+          "functionalRoleId"
+        ],
+        "additionalProperties": false
+      },
+      "description": "ADDED. List of catalogue/functional-role grants for this user, embedded directly on the user record (one entry per catalogue the user has a functional role on). A user may hold roles on multiple catalogues at once, e.g. maker on one catalogue and checker1/checker2 on others."
+    }
+  },
+  "required": [
+    "firstName",
+    "lastName",
+    "userCode",
+    "email",
+    "orgId",
+    "entityType",
+    "password",
+    "pin"
+  ]
 }
