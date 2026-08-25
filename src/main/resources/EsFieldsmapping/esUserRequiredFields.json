@@ -1,4 +1,7 @@
 {
+  "userId": {
+    "type": "keyword"
+  },
   "firstName": {
     "type": "keyword"
   },
@@ -20,22 +23,43 @@
   "orgId": {
     "type": "keyword"
   },
-  "departmentName": {
+  "orgName": {
     "type": "keyword"
   },
-  "entityType": {
+  "functionalRole": {
     "type": "keyword"
   },
-  "region": {
+  "displayName": {
     "type": "keyword"
   },
-  "zone": {
+  "location0Id": {
     "type": "keyword"
   },
-  "woreda": {
+  "location0Name": {
     "type": "keyword"
   },
-  "kebele": {
+  "location1Id": {
+    "type": "keyword"
+  },
+  "location1Name": {
+    "type": "keyword"
+  },
+  "location2Id": {
+    "type": "keyword"
+  },
+  "location2Name": {
+    "type": "keyword"
+  },
+  "location3Id": {
+    "type": "keyword"
+  },
+  "location3Name": {
+    "type": "keyword"
+  },
+  "location4Id": {
+    "type": "keyword"
+  },
+  "location4Name": {
     "type": "keyword"
   },
   "createdBy": {
@@ -64,19 +88,5 @@
   },
   "updatedOn": {
     "type": "date"
-  },
-  "registry": {
-    "type": "nested",
-    "properties": {
-      "catalogueId": {
-        "type": "keyword"
-      },
-      "functionalRoleId": {
-        "type": "keyword"
-      },
-      "displayName": {
-        "type": "keyword"
-      }
-    }
   }
 }

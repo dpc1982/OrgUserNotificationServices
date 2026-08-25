@@ -1,4 +1,4 @@
-package com.catalogue.verg.departmenttype.entity;
+package com.catalogue.verg.orgtype.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -19,11 +19,11 @@ import org.hibernate.annotations.Type;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "departmenttype")
+@Table(name = "orgtype")
 @Entity
-public class DepartmenttypeEntity {
+public class OrgtypeEntity {
     @Id
-    private String departmenttypeId;
+    private String orgtypeId;
 
     @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb")

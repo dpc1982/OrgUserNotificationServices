@@ -1,4 +1,4 @@
-package com.catalogue.verg.departmenttype.service.impl;
+package com.catalogue.verg.orgtype.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -25,9 +25,9 @@ import com.catalogue.verg.core.util.VergProperties;
 import com.catalogue.verg.core.service.ImportService;
 import com.catalogue.verg.core.service.LoadFromPrimaryService;
 import com.catalogue.verg.core.util.PrimaryKeyUtil;
-import com.catalogue.verg.departmenttype.entity.DepartmenttypeEntity;
-import com.catalogue.verg.departmenttype.repository.DepartmenttypeRepository;
-import com.catalogue.verg.departmenttype.service.DepartmenttypeService;
+import com.catalogue.verg.orgtype.entity.OrgtypeEntity;
+import com.catalogue.verg.orgtype.repository.OrgtypeRepository;
+import com.catalogue.verg.orgtype.service.OrgtypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
-public class DepartmenttypeServiceImpl implements DepartmenttypeService {
+public class OrgtypeServiceImpl implements OrgtypeService {
     @Autowired
     private PayloadValidation payloadValidation;
 
@@ -58,7 +58,7 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
     private PrimaryKeyUtil primaryKeyUtil;
 
     @Autowired
-    private DepartmenttypeRepository departmenttypeRepository;
+    private OrgtypeRepository orgtypeRepository;
 
     @Autowired
     private ESUtilService esUtilService;
@@ -91,51 +91,51 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
      * Catalogue name recorded on every audit row emitted by this service. Doubles as the key
      * this catalogue is looked up by in the lifecycle switches ({@link LifecyclePolicy}).
      */
-    private static final String AUDIT_ENTITY_NAME = "departmenttype";
+    private static final String AUDIT_ENTITY_NAME = "orgtype";
 
-    private Logger logger = LoggerFactory.getLogger(DepartmenttypeServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(OrgtypeServiceImpl.class);
 
     @Value("${spring.redis.cacheTtl}")
     private long searchResultRedisTtl;
 
     @Override
-    public CustomResponse createDepartmenttype(JsonNode departmenttypeEntity) {
-        log.info("DepartmenttypeServiceImpl::createDepartmenttype:entered the method: " + departmenttypeEntity);
+    public CustomResponse createOrgtype(JsonNode orgtypeEntity) {
+        log.info("OrgtypeServiceImpl::createOrgtype:entered the method: " + orgtypeEntity);
         CustomResponse response = new CustomResponse();
-        payloadValidation.validatePayload(Constants.DEPARTMENTTYPE_VALIDATION_FILE_JSON, departmenttypeEntity);
+        payloadValidation.validatePayload(Constants.ORGTYPE_VALIDATION_FILE_JSON, orgtypeEntity);
 
-        log.debug("DepartmenttypeServiceImpl::createDepartmenttype:validated the payload");
+        log.debug("OrgtypeServiceImpl::createOrgtype:validated the payload");
         try {
-            log.info("DepartmenttypeServiceImpl::createDepartmenttype:creating departmenttype");
-            DepartmenttypeEntity departmenttypeEntity1 = new DepartmenttypeEntity();
+            log.info("OrgtypeServiceImpl::createOrgtype:creating orgtype");
+            OrgtypeEntity orgtypeEntity1 = new OrgtypeEntity();
             // Generate Primary Key
-            String primaryID = primaryKeyUtil.generateKey(Constants.DEPARTMENTTYPE_VALIDATION_FILE_JSON);
-            departmenttypeEntity1.setDepartmenttypeId(primaryID);
+            String primaryID = primaryKeyUtil.generateKey(Constants.ORGTYPE_VALIDATION_FILE_JSON);
+            orgtypeEntity1.setOrgtypeId(primaryID);
             // Create Parameters like createdDate / updateDate / Data and Status
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
             
             String initialStatus = lifecyclePolicy.initialStatus(AUDIT_ENTITY_NAME);
-            departmenttypeEntity1.setCreatedOn(currentTime);
-            departmenttypeEntity1.setUpdatedOn(currentTime);
-            departmenttypeEntity1.setStatus(initialStatus);
-            departmenttypeEntity1.setData(departmenttypeEntity);
+            orgtypeEntity1.setCreatedOn(currentTime);
+            orgtypeEntity1.setUpdatedOn(currentTime);
+            orgtypeEntity1.setStatus(initialStatus);
+            orgtypeEntity1.setData(orgtypeEntity);
 
-            departmenttypeRepository.save(departmenttypeEntity1);
+            orgtypeRepository.save(orgtypeEntity1);
 
-            log.info("DepartmenttypeServiceImpl::createDepartmenttype::persisted departmenttype in postgres");
-            ObjectNode jsonNode = buildDocument(departmenttypeEntity, initialStatus, currentTime, currentTime);
+            log.info("OrgtypeServiceImpl::createOrgtype::persisted orgtype in postgres");
+            ObjectNode jsonNode = buildDocument(orgtypeEntity, initialStatus, currentTime, currentTime);
             Map<String, Object> map = objectMapper.convertValue(jsonNode, Map.class);
-            esUtilService.addDocument(Constants.DEPARTMENTTYPE_INDEX_NAME, Constants.INDEX_TYPE,
-                    String.valueOf(primaryID), map, vergProperties.getElasticDepartmenttypeJsonPath());
+            esUtilService.addDocument(Constants.ORGTYPE_INDEX_NAME, Constants.INDEX_TYPE,
+                    String.valueOf(primaryID), map, vergProperties.getElasticOrgtypeJsonPath());
             cacheService.putCache(primaryID, jsonNode);
             response.setMessage(Constants.SUCCESSFULLY_CREATED);
-            map.put(Constants.DEPARTMENTTYPE_ID_RQST, primaryID);
+            map.put(Constants.ORGTYPE_ID_RQST, primaryID);
             response.setResult(map);
             response.setResponseCode(HttpStatus.OK);
-            log.info("DepartmenttypeServiceImpl::createDepartmenttype::persisted departmenttype in OAS");
+            log.info("OrgtypeServiceImpl::createOrgtype::persisted orgtype in OAS");
             // auditLogService.logAudit(primaryID, AUDIT_ENTITY_NAME, "create", initialStatus,
-            //         objectMapper.createObjectNode(), departmenttypeEntity,
-            //         departmenttypeEntity1.getCreatedOn(), departmenttypeEntity1.getUpdatedOn());
+            //         objectMapper.createObjectNode(), orgtypeEntity,
+            //         orgtypeEntity1.getCreatedOn(), orgtypeEntity1.getUpdatedOn());
             return response;
 
         } catch (Exception e) {
@@ -145,13 +145,13 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
     }
 
     @Override
-    public CustomResponse searchDepartmenttype(SearchCriteria searchCriteria) {
-        log.info("DepartmenttypeServiceImpl::searchDepartmenttype");
+    public CustomResponse searchOrgtype(SearchCriteria searchCriteria) {
+        log.info("OrgtypeServiceImpl::searchOrgtype");
         CustomResponse response = new CustomResponse();
         SearchResult searchResult = redisTemplate.opsForValue()
                 .get(generateRedisJwtTokenKey(searchCriteria));
         if (searchResult != null) {
-            log.info("DepartmenttypeServiceImpl::searchDepartmenttype: departmenttype search result fetched from redis");
+            log.info("OrgtypeServiceImpl::searchOrgtype: orgtype search result fetched from redis");
             response.getResult().put(Constants.RESULT, searchResult);
             createSuccessResponse(response);
             // auditLogService.logAudit(null, AUDIT_ENTITY_NAME, "search", null, null,
@@ -167,7 +167,7 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
         }
         try {
             searchResult =
-                    esUtilService.searchDocuments(Constants.DEPARTMENTTYPE_INDEX_NAME, searchCriteria);
+                    esUtilService.searchDocuments(Constants.ORGTYPE_INDEX_NAME, searchCriteria);
             response.getResult().put(Constants.RESULT, searchResult);
             createSuccessResponse(response);
             // auditLogService.logAudit(null, AUDIT_ENTITY_NAME, "search", null, null,
@@ -184,13 +184,13 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
     }
 
     @Override
-    public CustomResponse assignDepartmenttype(JsonNode departmenttypeEntity, String token) {
+    public CustomResponse assignOrgtype(JsonNode orgtypeEntity, String token) {
         return null;
     }
 
     @Override
     public CustomResponse read(String id) {
-        log.info("DepartmenttypeServiceImpl::read:inside the method");
+        log.info("OrgtypeServiceImpl::read:inside the method");
         CustomResponse response = new CustomResponse();
         if (StringUtils.isEmpty(id)) {
             response.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -203,7 +203,7 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
         try {
             String cachedJson = cacheService.getCache(id);
             if (StringUtils.isNotEmpty(cachedJson)) {
-                log.info("DepartmenttypeServiceImpl::read:Record coming from redis cache");
+                log.info("OrgtypeServiceImpl::read:Record coming from redis cache");
                 response.setMessage(Constants.SUCCESSFULLY_READING);
                 response
                         .getResult()
@@ -211,14 +211,14 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
                         }));
                 auditAfter = objectMapper.readTree(cachedJson);
             } else {
-                Optional<DepartmenttypeEntity> entityOptional = departmenttypeRepository.findById(id);
+                Optional<OrgtypeEntity> entityOptional = orgtypeRepository.findById(id);
                 if (entityOptional.isPresent()) {
-                    DepartmenttypeEntity departmenttypeEntity = entityOptional.get();
-                    ObjectNode jsonNode = buildDocument(departmenttypeEntity.getData(),
-                            departmenttypeEntity.getStatus(), departmenttypeEntity.getCreatedOn(),
-                            departmenttypeEntity.getUpdatedOn());
+                    OrgtypeEntity orgtypeEntity = entityOptional.get();
+                    ObjectNode jsonNode = buildDocument(orgtypeEntity.getData(),
+                            orgtypeEntity.getStatus(), orgtypeEntity.getCreatedOn(),
+                            orgtypeEntity.getUpdatedOn());
                     cacheService.putCache(id, jsonNode);
-                    log.info("DepartmenttypeServiceImpl::read:Record coming from postgres db");
+                    log.info("OrgtypeServiceImpl::read:Record coming from postgres db");
                     response.setMessage(Constants.SUCCESSFULLY_READING);
                     response
                             .getResult()
@@ -227,8 +227,8 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
                                             jsonNode, new TypeReference<Object>() {
                                             }));
                     auditAfter = jsonNode;
-                    auditCreatedOn = departmenttypeEntity.getCreatedOn();
-                    auditUpdatedOn = departmenttypeEntity.getUpdatedOn();
+                    auditCreatedOn = orgtypeEntity.getCreatedOn();
+                    auditUpdatedOn = orgtypeEntity.getUpdatedOn();
                 } else {
                     response.setResponseCode(HttpStatus.NOT_FOUND);
                     response.setMessage(Constants.INVALID_ID);
@@ -246,37 +246,37 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
     }
 
     @Override
-    public CustomResponse updateDepartmenttype(String id, JsonNode departmenttypeEntity) {
-        log.info("DepartmenttypeServiceImpl::updateDepartmenttype:entered the method with id: {}", id);
+    public CustomResponse updateOrgtype(String id, JsonNode orgtypeEntity) {
+        log.info("OrgtypeServiceImpl::updateOrgtype:entered the method with id: {}", id);
         CustomResponse response = new CustomResponse();
 
         // Validate that the ID is not null or empty
         if (StringUtils.isEmpty(id)) {
-            log.warn("DepartmenttypeServiceImpl::updateDepartmenttype:id is null or empty");
+            log.warn("OrgtypeServiceImpl::updateOrgtype:id is null or empty");
             response.setResponseCode(HttpStatus.BAD_REQUEST);
             response.setMessage(Constants.ID_NOT_FOUND);
             return response;
         }
 
         // Validate the incoming payload against the entity schema (same as create)
-        payloadValidation.validatePayload(Constants.DEPARTMENTTYPE_VALIDATION_FILE_JSON, departmenttypeEntity);
-        log.debug("DepartmenttypeServiceImpl::updateDepartmenttype:validated the payload");
+        payloadValidation.validatePayload(Constants.ORGTYPE_VALIDATION_FILE_JSON, orgtypeEntity);
+        log.debug("OrgtypeServiceImpl::updateOrgtype:validated the payload");
 
         try {
             // Check if the entity exists in the database
-            Optional<DepartmenttypeEntity> entityOptional = departmenttypeRepository.findById(id);
+            Optional<OrgtypeEntity> entityOptional = orgtypeRepository.findById(id);
             if (entityOptional.isEmpty()) {
-                log.warn("DepartmenttypeServiceImpl::updateDepartmenttype:no record found for id: {}", id);
+                log.warn("OrgtypeServiceImpl::updateOrgtype:no record found for id: {}", id);
                 response.setResponseCode(HttpStatus.NOT_FOUND);
                 response.setMessage(Constants.INVALID_ID);
                 return response;
             }
 
-            DepartmenttypeEntity departmenttypeEntity1 = entityOptional.get();
+            OrgtypeEntity orgtypeEntity1 = entityOptional.get();
 
             // Reject updates on soft-deleted (DELETED) records
-            if (Constants.DELETED.equals(departmenttypeEntity1.getStatus())) {
-                log.warn("DepartmenttypeServiceImpl::updateDepartmenttype:record already deleted for id: {}", id);
+            if (Constants.DELETED.equals(orgtypeEntity1.getStatus())) {
+                log.warn("OrgtypeServiceImpl::updateOrgtype:record already deleted for id: {}", id);
                 response.setResponseCode(HttpStatus.BAD_REQUEST);
                 response.setMessage("Record is already deleted");
                 return response;
@@ -284,31 +284,31 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
 
             // Replace payload; preserve id / createdOn / status, bump updatedOn
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            departmenttypeEntity1.setData(departmenttypeEntity);
-            departmenttypeEntity1.setUpdatedOn(currentTime);
-            departmenttypeRepository.save(departmenttypeEntity1);
-            log.info("DepartmenttypeServiceImpl::updateDepartmenttype:updated record in postgres for id: {}", id);
+            orgtypeEntity1.setData(orgtypeEntity);
+            orgtypeEntity1.setUpdatedOn(currentTime);
+            orgtypeRepository.save(orgtypeEntity1);
+            log.info("OrgtypeServiceImpl::updateOrgtype:updated record in postgres for id: {}", id);
 
             // Re-index the document in Elasticsearch (filtered to whitelisted fields)
-            ObjectNode jsonNode = buildDocument(departmenttypeEntity, departmenttypeEntity1.getStatus(),
-                    departmenttypeEntity1.getCreatedOn(), currentTime);
+            ObjectNode jsonNode = buildDocument(orgtypeEntity, orgtypeEntity1.getStatus(),
+                    orgtypeEntity1.getCreatedOn(), currentTime);
             Map<String, Object> map = objectMapper.convertValue(jsonNode, Map.class);
-            esUtilService.updateDocument(Constants.DEPARTMENTTYPE_INDEX_NAME, Constants.INDEX_TYPE,
-                    id, map, vergProperties.getElasticDepartmenttypeJsonPath());
-            log.info("DepartmenttypeServiceImpl::updateDepartmenttype:updated document in elasticsearch for id: {}", id);
+            esUtilService.updateDocument(Constants.ORGTYPE_INDEX_NAME, Constants.INDEX_TYPE,
+                    id, map, vergProperties.getElasticOrgtypeJsonPath());
+            log.info("OrgtypeServiceImpl::updateOrgtype:updated document in elasticsearch for id: {}", id);
 
             // Refresh the Redis cache
             cacheService.putCache(id, jsonNode);
-            log.info("DepartmenttypeServiceImpl::updateDepartmenttype:refreshed cache for id: {}", id);
+            log.info("OrgtypeServiceImpl::updateOrgtype:refreshed cache for id: {}", id);
 
-            map.put(Constants.DEPARTMENTTYPE_ID_RQST, id);
+            map.put(Constants.ORGTYPE_ID_RQST, id);
             response.setResult(map);
             response.setMessage(Constants.SUCCESSFULLY_UPDATED);
             response.setResponseCode(HttpStatus.OK);
             return response;
 
         } catch (Exception e) {
-            log.error("DepartmenttypeServiceImpl::updateDepartmenttype:error while updating record for id: {}", id, e);
+            log.error("OrgtypeServiceImpl::updateOrgtype:error while updating record for id: {}", id, e);
             throw new CustomException("error while processing", e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -316,12 +316,12 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
 
     @Override
     public CustomResponse delete(String id) {
-        log.info("DepartmenttypeServiceImpl::delete:inside the method with id: {}", id);
+        log.info("OrgtypeServiceImpl::delete:inside the method with id: {}", id);
         CustomResponse response = new CustomResponse();
 
         // Validate that the ID is not null or empty
         if (StringUtils.isEmpty(id)) {
-            log.warn("DepartmenttypeServiceImpl::delete:id is null or empty");
+            log.warn("OrgtypeServiceImpl::delete:id is null or empty");
             response.setResponseCode(HttpStatus.BAD_REQUEST);
             response.setMessage(Constants.ID_NOT_FOUND);
             return response;
@@ -329,47 +329,47 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
 
         try {
             // Check if the entity exists in the database
-            Optional<DepartmenttypeEntity> entityOptional = departmenttypeRepository.findById(id);
+            Optional<OrgtypeEntity> entityOptional = orgtypeRepository.findById(id);
             if (entityOptional.isEmpty()) {
-                log.warn("DepartmenttypeServiceImpl::delete:no record found for id: {}", id);
+                log.warn("OrgtypeServiceImpl::delete:no record found for id: {}", id);
                 response.setResponseCode(HttpStatus.NOT_FOUND);
                 response.setMessage(Constants.INVALID_ID);
                 return response;
             }
 
-            DepartmenttypeEntity departmenttypeEntity = entityOptional.get();
+            OrgtypeEntity orgtypeEntity = entityOptional.get();
 
             // Check if the entity is already deleted
-            if (Constants.DELETED.equals(departmenttypeEntity.getStatus())) {
-                log.warn("DepartmenttypeServiceImpl::delete:record already deleted for id: {}", id);
+            if (Constants.DELETED.equals(orgtypeEntity.getStatus())) {
+                log.warn("OrgtypeServiceImpl::delete:record already deleted for id: {}", id);
                 response.setResponseCode(HttpStatus.BAD_REQUEST);
                 response.setMessage("Record is already deleted");
                 return response;
             }
 
             // Soft delete: mark the status DELETED and set updatedOn timestamp
-            departmenttypeEntity.setStatus(Constants.DELETED);
-            departmenttypeEntity.setUpdatedOn(new Timestamp(System.currentTimeMillis()));
-            departmenttypeRepository.save(departmenttypeEntity);
-            log.info("DepartmenttypeServiceImpl::delete:soft deleted record in postgres for id: {}", id);
+            orgtypeEntity.setStatus(Constants.DELETED);
+            orgtypeEntity.setUpdatedOn(new Timestamp(System.currentTimeMillis()));
+            orgtypeRepository.save(orgtypeEntity);
+            log.info("OrgtypeServiceImpl::delete:soft deleted record in postgres for id: {}", id);
 
             // Remove document from Elasticsearch
-            esUtilService.deleteDocument(id, Constants.DEPARTMENTTYPE_INDEX_NAME);
-            log.info("DepartmenttypeServiceImpl::delete:deleted document from elasticsearch for id: {}", id);
+            esUtilService.deleteDocument(id, Constants.ORGTYPE_INDEX_NAME);
+            log.info("OrgtypeServiceImpl::delete:deleted document from elasticsearch for id: {}", id);
 
             // Remove from Redis cache
             cacheService.deleteCache(id);
-            log.info("DepartmenttypeServiceImpl::delete:evicted cache for id: {}", id);
+            log.info("OrgtypeServiceImpl::delete:evicted cache for id: {}", id);
 
             response.setMessage(Constants.SUCCESSFULLY_DELETED);
             response.setResponseCode(HttpStatus.OK);
             // auditLogService.logAudit(id, AUDIT_ENTITY_NAME, "delete", Constants.DELETED,
-            //         departmenttypeEntity.getData(), departmenttypeEntity.getData(),
-            //         departmenttypeEntity.getCreatedOn(), departmenttypeEntity.getUpdatedOn());
+            //         orgtypeEntity.getData(), orgtypeEntity.getData(),
+            //         orgtypeEntity.getCreatedOn(), orgtypeEntity.getUpdatedOn());
             return response;
 
         } catch (Exception e) {
-            log.error("DepartmenttypeServiceImpl::delete:error while deleting record for id: {}", id, e);
+            log.error("OrgtypeServiceImpl::delete:error while deleting record for id: {}", id, e);
             throw new CustomException(Constants.ERROR, "error while deleting record",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -377,22 +377,22 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
 
     @Override
     public CustomResponse importData(MultipartFile file) {
-        log.info("DepartmenttypeServiceImpl::importData::started");
+        log.info("OrgtypeServiceImpl::importData::started");
         return importService.processBulkImport(
                 file,
-                Constants.DEPARTMENTTYPE_VALIDATION_FILE_JSON,
-                this::createDepartmenttype
+                Constants.ORGTYPE_VALIDATION_FILE_JSON,
+                this::createOrgtype
         );
     }
 
     @Override
-    public CustomResponse loadFromPrimaryDepartmenttype() {
-        log.info("DepartmenttypeServiceImpl::loadFromPrimaryDepartmenttype::started");
+    public CustomResponse loadFromPrimaryOrgtype() {
+        log.info("OrgtypeServiceImpl::loadFromPrimaryOrgtype::started");
         return loadFromPrimaryService.loadFromPrimary(
-                Constants.DEPARTMENTTYPE_INDEX_NAME,
-                vergProperties.getElasticDepartmenttypeJsonPath(),
-                departmenttypeRepository.findAll(),
-                DepartmenttypeEntity::getDepartmenttypeId,
+                Constants.ORGTYPE_INDEX_NAME,
+                vergProperties.getElasticOrgtypeJsonPath(),
+                orgtypeRepository.findAll(),
+                OrgtypeEntity::getOrgtypeId,
                 e -> objectMapper.convertValue(
                         buildDocument(e.getData(), e.getStatus(), e.getCreatedOn(), e.getUpdatedOn()),
                         Map.class),
@@ -400,39 +400,39 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
     }
 
     @Override
-    public CustomResponse draftDepartmenttype(JsonNode departmenttypeEntity) {
-        log.info("DepartmenttypeServiceImpl::draftDepartmenttype:entered the method: " + departmenttypeEntity);
+    public CustomResponse draftOrgtype(JsonNode orgtypeEntity) {
+        log.info("OrgtypeServiceImpl::draftOrgtype:entered the method: " + orgtypeEntity);
         // Guard before the try block: the 404 must not be swallowed by the catch below
         lifecyclePolicy.requireEnabled(AUDIT_ENTITY_NAME);
         CustomResponse response = new CustomResponse();
         // Relaxed validation: types/structure enforced, but required fields may be missing
-        payloadValidation.validatePayloadRelaxed(Constants.DEPARTMENTTYPE_VALIDATION_FILE_JSON, departmenttypeEntity);
-        log.debug("DepartmenttypeServiceImpl::draftDepartmenttype:validated the payload (relaxed)");
+        payloadValidation.validatePayloadRelaxed(Constants.ORGTYPE_VALIDATION_FILE_JSON, orgtypeEntity);
+        log.debug("OrgtypeServiceImpl::draftOrgtype:validated the payload (relaxed)");
         try {
-            DepartmenttypeEntity departmenttypeEntity1 = new DepartmenttypeEntity();
-            String primaryID = primaryKeyUtil.generateKey(Constants.DEPARTMENTTYPE_VALIDATION_FILE_JSON);
-            departmenttypeEntity1.setDepartmenttypeId(primaryID);
+            OrgtypeEntity orgtypeEntity1 = new OrgtypeEntity();
+            String primaryID = primaryKeyUtil.generateKey(Constants.ORGTYPE_VALIDATION_FILE_JSON);
+            orgtypeEntity1.setOrgtypeId(primaryID);
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            departmenttypeEntity1.setCreatedOn(currentTime);
-            departmenttypeEntity1.setUpdatedOn(currentTime);
-            departmenttypeEntity1.setStatus(Constants.DRAFT);
-            departmenttypeEntity1.setData(departmenttypeEntity);
+            orgtypeEntity1.setCreatedOn(currentTime);
+            orgtypeEntity1.setUpdatedOn(currentTime);
+            orgtypeEntity1.setStatus(Constants.DRAFT);
+            orgtypeEntity1.setData(orgtypeEntity);
 
-            departmenttypeRepository.save(departmenttypeEntity1);
-            log.info("DepartmenttypeServiceImpl::draftDepartmenttype::persisted draft in postgres");
+            orgtypeRepository.save(orgtypeEntity1);
+            log.info("OrgtypeServiceImpl::draftOrgtype::persisted draft in postgres");
 
-            ObjectNode jsonNode = buildDocument(departmenttypeEntity, Constants.DRAFT, currentTime, currentTime);
+            ObjectNode jsonNode = buildDocument(orgtypeEntity, Constants.DRAFT, currentTime, currentTime);
             Map<String, Object> map = objectMapper.convertValue(jsonNode, Map.class);
-            esUtilService.addDocument(Constants.DEPARTMENTTYPE_INDEX_NAME, Constants.INDEX_TYPE,
-                    String.valueOf(primaryID), map, vergProperties.getElasticDepartmenttypeJsonPath());
+            esUtilService.addDocument(Constants.ORGTYPE_INDEX_NAME, Constants.INDEX_TYPE,
+                    String.valueOf(primaryID), map, vergProperties.getElasticOrgtypeJsonPath());
             cacheService.putCache(primaryID, jsonNode);
-            map.put(Constants.DEPARTMENTTYPE_ID_RQST, primaryID);
+            map.put(Constants.ORGTYPE_ID_RQST, primaryID);
             response.setResult(map);
             response.setMessage(Constants.SUCCESSFULLY_CREATED);
             response.setResponseCode(HttpStatus.OK);
             // auditLogService.logAudit(primaryID, AUDIT_ENTITY_NAME, "draft", Constants.DRAFT,
-            //         objectMapper.createObjectNode(), departmenttypeEntity,
-            //         departmenttypeEntity1.getCreatedOn(), departmenttypeEntity1.getUpdatedOn());
+            //         objectMapper.createObjectNode(), orgtypeEntity,
+            //         orgtypeEntity1.getCreatedOn(), orgtypeEntity1.getUpdatedOn());
             return response;
         } catch (Exception e) {
             throw new CustomException("error while processing", e.getMessage(),
@@ -441,8 +441,8 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
     }
 
     @Override
-    public CustomResponse addDepartmenttype(String id, JsonNode departmenttypeEntity) {
-        log.info("DepartmenttypeServiceImpl::addDepartmenttype:entered the method with id: {}", id);
+    public CustomResponse addOrgtype(String id, JsonNode orgtypeEntity) {
+        log.info("OrgtypeServiceImpl::addOrgtype:entered the method with id: {}", id);
         // Guard before the try block: the 404 must not be swallowed by the catch below
         lifecyclePolicy.requireEnabled(AUDIT_ENTITY_NAME);
         CustomResponse response = new CustomResponse();
@@ -452,45 +452,45 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
             return response;
         }
         // Full validation: all required fields must be present to submit for approval
-        payloadValidation.validatePayload(Constants.DEPARTMENTTYPE_VALIDATION_FILE_JSON, departmenttypeEntity);
-        log.debug("DepartmenttypeServiceImpl::addDepartmenttype:validated the payload");
+        payloadValidation.validatePayload(Constants.ORGTYPE_VALIDATION_FILE_JSON, orgtypeEntity);
+        log.debug("OrgtypeServiceImpl::addOrgtype:validated the payload");
         try {
-            Optional<DepartmenttypeEntity> entityOptional = departmenttypeRepository.findById(id);
+            Optional<OrgtypeEntity> entityOptional = orgtypeRepository.findById(id);
             if (entityOptional.isEmpty()) {
                 response.setResponseCode(HttpStatus.NOT_FOUND);
                 response.setMessage(Constants.INVALID_ID);
                 return response;
             }
-            DepartmenttypeEntity departmenttypeEntity1 = entityOptional.get();
+            OrgtypeEntity orgtypeEntity1 = entityOptional.get();
             // Only DRAFT or REWORK records can be (re-)submitted for approval
-            if (!LifecycleUtil.ADD_PROMOTABLE.contains(departmenttypeEntity1.getStatus())) {
-                log.warn("DepartmenttypeServiceImpl::addDepartmenttype:record {} not in DRAFT/REWORK (status={})",
-                        id, departmenttypeEntity1.getStatus());
+            if (!LifecycleUtil.ADD_PROMOTABLE.contains(orgtypeEntity1.getStatus())) {
+                log.warn("OrgtypeServiceImpl::addOrgtype:record {} not in DRAFT/REWORK (status={})",
+                        id, orgtypeEntity1.getStatus());
                 response.setResponseCode(HttpStatus.CONFLICT);
                 response.setMessage(Constants.INVALID_STATUS_TRANSITION);
                 return response;
             }
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            JsonNode auditBefore = departmenttypeEntity1.getData();
-            departmenttypeEntity1.setData(departmenttypeEntity);
-            departmenttypeEntity1.setStatus(Constants.PENDING);
-            departmenttypeEntity1.setUpdatedOn(currentTime);
-            departmenttypeRepository.save(departmenttypeEntity1);
-            log.info("DepartmenttypeServiceImpl::addDepartmenttype:submitted record {} for approval (PENDING)", id);
+            JsonNode auditBefore = orgtypeEntity1.getData();
+            orgtypeEntity1.setData(orgtypeEntity);
+            orgtypeEntity1.setStatus(Constants.PENDING);
+            orgtypeEntity1.setUpdatedOn(currentTime);
+            orgtypeRepository.save(orgtypeEntity1);
+            log.info("OrgtypeServiceImpl::addOrgtype:submitted record {} for approval (PENDING)", id);
 
-            ObjectNode jsonNode = buildDocument(departmenttypeEntity, Constants.PENDING,
-                    departmenttypeEntity1.getCreatedOn(), currentTime);
+            ObjectNode jsonNode = buildDocument(orgtypeEntity, Constants.PENDING,
+                    orgtypeEntity1.getCreatedOn(), currentTime);
             Map<String, Object> map = objectMapper.convertValue(jsonNode, Map.class);
-            esUtilService.updateDocument(Constants.DEPARTMENTTYPE_INDEX_NAME, Constants.INDEX_TYPE,
-                    id, map, vergProperties.getElasticDepartmenttypeJsonPath());
+            esUtilService.updateDocument(Constants.ORGTYPE_INDEX_NAME, Constants.INDEX_TYPE,
+                    id, map, vergProperties.getElasticOrgtypeJsonPath());
             cacheService.putCache(id, jsonNode);
-            map.put(Constants.DEPARTMENTTYPE_ID_RQST, id);
+            map.put(Constants.ORGTYPE_ID_RQST, id);
             response.setResult(map);
             response.setMessage(Constants.SUCCESSFULLY_UPDATED);
             response.setResponseCode(HttpStatus.OK);
             // auditLogService.logAudit(id, AUDIT_ENTITY_NAME, "add-promote", Constants.PENDING,
-            //         auditBefore, departmenttypeEntity,
-            //         departmenttypeEntity1.getCreatedOn(), departmenttypeEntity1.getUpdatedOn());
+            //         auditBefore, orgtypeEntity,
+            //         orgtypeEntity1.getCreatedOn(), orgtypeEntity1.getUpdatedOn());
             return response;
         } catch (Exception e) {
             throw new CustomException("error while processing", e.getMessage(),
@@ -499,22 +499,22 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
     }
 
     @Override
-    public CustomResponse approveDepartmenttype(LifecycleRequest request) {
-        log.info("DepartmenttypeServiceImpl::approveDepartmenttype:entered the method");
+    public CustomResponse approveOrgtype(LifecycleRequest request) {
+        log.info("OrgtypeServiceImpl::approveOrgtype:entered the method");
         lifecyclePolicy.requireEnabled(AUDIT_ENTITY_NAME);
         return transitionStatus(request, "approve", LifecycleUtil.APPROVE_FROM, LifecycleUtil.APPROVE_TARGETS);
     }
 
     @Override
-    public CustomResponse reviewDepartmenttype(LifecycleRequest request) {
-        log.info("DepartmenttypeServiceImpl::reviewDepartmenttype:entered the method");
+    public CustomResponse reviewOrgtype(LifecycleRequest request) {
+        log.info("OrgtypeServiceImpl::reviewOrgtype:entered the method");
         lifecyclePolicy.requireEnabled(AUDIT_ENTITY_NAME);
         return transitionStatus(request, "review", LifecycleUtil.REVIEW_FROM, LifecycleUtil.REVIEW_TARGETS);
     }
 
     @Override
     public CustomResponse toggleStatus(String id) {
-        log.info("DepartmenttypeServiceImpl::toggleStatus:entered the method with id: {}", id);
+        log.info("OrgtypeServiceImpl::toggleStatus:entered the method with id: {}", id);
         CustomResponse response = new CustomResponse();
         if (StringUtils.isEmpty(id)) {
             response.setResponseCode(HttpStatus.BAD_REQUEST);
@@ -522,14 +522,14 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
             return response;
         }
         try {
-            Optional<DepartmenttypeEntity> entityOptional = departmenttypeRepository.findById(id);
+            Optional<OrgtypeEntity> entityOptional = orgtypeRepository.findById(id);
             if (entityOptional.isEmpty()) {
                 response.setResponseCode(HttpStatus.NOT_FOUND);
                 response.setMessage(Constants.INVALID_ID);
                 return response;
             }
-            DepartmenttypeEntity departmenttypeEntity1 = entityOptional.get();
-            String currentStatus = departmenttypeEntity1.getStatus();
+            OrgtypeEntity orgtypeEntity1 = entityOptional.get();
+            String currentStatus = orgtypeEntity1.getStatus();
             String newStatus;
             if (Constants.ACTIVE.equals(currentStatus)) {
                 newStatus = Constants.IN_ACTIVE;
@@ -537,31 +537,31 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
                 newStatus = Constants.ACTIVE;
             } else {
                 // Only a published (ACTIVE) or deactivated (INACTIVE) record can be toggled
-                log.warn("DepartmenttypeServiceImpl::toggleStatus:record {} is {}, can only toggle ACTIVE<->INACTIVE",
+                log.warn("OrgtypeServiceImpl::toggleStatus:record {} is {}, can only toggle ACTIVE<->INACTIVE",
                         id, currentStatus);
                 response.setResponseCode(HttpStatus.CONFLICT);
                 response.setMessage(Constants.INVALID_STATUS_TRANSITION);
                 return response;
             }
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            departmenttypeEntity1.setStatus(newStatus);
-            departmenttypeEntity1.setUpdatedOn(currentTime);
-            departmenttypeRepository.save(departmenttypeEntity1);
-            log.info("DepartmenttypeServiceImpl::toggleStatus:record {} toggled {} -> {}", id, currentStatus, newStatus);
+            orgtypeEntity1.setStatus(newStatus);
+            orgtypeEntity1.setUpdatedOn(currentTime);
+            orgtypeRepository.save(orgtypeEntity1);
+            log.info("OrgtypeServiceImpl::toggleStatus:record {} toggled {} -> {}", id, currentStatus, newStatus);
 
-            ObjectNode jsonNode = buildDocument(departmenttypeEntity1.getData(), newStatus,
-                    departmenttypeEntity1.getCreatedOn(), currentTime);
+            ObjectNode jsonNode = buildDocument(orgtypeEntity1.getData(), newStatus,
+                    orgtypeEntity1.getCreatedOn(), currentTime);
             Map<String, Object> map = objectMapper.convertValue(jsonNode, Map.class);
-            esUtilService.updateDocument(Constants.DEPARTMENTTYPE_INDEX_NAME, Constants.INDEX_TYPE,
-                    id, map, vergProperties.getElasticDepartmenttypeJsonPath());
+            esUtilService.updateDocument(Constants.ORGTYPE_INDEX_NAME, Constants.INDEX_TYPE,
+                    id, map, vergProperties.getElasticOrgtypeJsonPath());
             cacheService.putCache(id, jsonNode);
-            map.put(Constants.DEPARTMENTTYPE_ID_RQST, id);
+            map.put(Constants.ORGTYPE_ID_RQST, id);
             response.setResult(map);
             response.setMessage(Constants.SUCCESSFULLY_UPDATED);
             response.setResponseCode(HttpStatus.OK);
             // auditLogService.logAudit(id, AUDIT_ENTITY_NAME, "toggle", newStatus,
-            //         departmenttypeEntity1.getData(), departmenttypeEntity1.getData(),
-            //         departmenttypeEntity1.getCreatedOn(), departmenttypeEntity1.getUpdatedOn());
+            //         orgtypeEntity1.getData(), orgtypeEntity1.getData(),
+            //         orgtypeEntity1.getCreatedOn(), orgtypeEntity1.getUpdatedOn());
             return response;
         } catch (Exception e) {
             throw new CustomException("error while processing", e.getMessage(),
@@ -584,47 +584,47 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
         String id = request.getId();
         String targetStatus = LifecycleUtil.normalizeTarget(request.getStatus());
         if (targetStatus == null || !allowedTargets.contains(targetStatus)) {
-            log.warn("DepartmenttypeServiceImpl::transitionStatus:invalid target status '{}' for id {}",
+            log.warn("OrgtypeServiceImpl::transitionStatus:invalid target status '{}' for id {}",
                     request.getStatus(), id);
             response.setResponseCode(HttpStatus.BAD_REQUEST);
             response.setMessage(Constants.INVALID_STATUS);
             return response;
         }
         try {
-            Optional<DepartmenttypeEntity> entityOptional = departmenttypeRepository.findById(id);
+            Optional<OrgtypeEntity> entityOptional = orgtypeRepository.findById(id);
             if (entityOptional.isEmpty()) {
                 response.setResponseCode(HttpStatus.NOT_FOUND);
                 response.setMessage(Constants.INVALID_ID);
                 return response;
             }
-            DepartmenttypeEntity departmenttypeEntity1 = entityOptional.get();
-            if (!requiredCurrentStatus.equals(departmenttypeEntity1.getStatus())) {
-                log.warn("DepartmenttypeServiceImpl::transitionStatus:record {} is {}, requires {}",
-                        id, departmenttypeEntity1.getStatus(), requiredCurrentStatus);
+            OrgtypeEntity orgtypeEntity1 = entityOptional.get();
+            if (!requiredCurrentStatus.equals(orgtypeEntity1.getStatus())) {
+                log.warn("OrgtypeServiceImpl::transitionStatus:record {} is {}, requires {}",
+                        id, orgtypeEntity1.getStatus(), requiredCurrentStatus);
                 response.setResponseCode(HttpStatus.CONFLICT);
                 response.setMessage(Constants.INVALID_STATUS_TRANSITION);
                 return response;
             }
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            departmenttypeEntity1.setStatus(targetStatus);
-            departmenttypeEntity1.setUpdatedOn(currentTime);
-            departmenttypeRepository.save(departmenttypeEntity1);
-            log.info("DepartmenttypeServiceImpl::transitionStatus:record {} moved {} -> {}",
+            orgtypeEntity1.setStatus(targetStatus);
+            orgtypeEntity1.setUpdatedOn(currentTime);
+            orgtypeRepository.save(orgtypeEntity1);
+            log.info("OrgtypeServiceImpl::transitionStatus:record {} moved {} -> {}",
                     id, requiredCurrentStatus, targetStatus);
 
-            ObjectNode jsonNode = buildDocument(departmenttypeEntity1.getData(), targetStatus,
-                    departmenttypeEntity1.getCreatedOn(), currentTime);
+            ObjectNode jsonNode = buildDocument(orgtypeEntity1.getData(), targetStatus,
+                    orgtypeEntity1.getCreatedOn(), currentTime);
             Map<String, Object> map = objectMapper.convertValue(jsonNode, Map.class);
-            esUtilService.updateDocument(Constants.DEPARTMENTTYPE_INDEX_NAME, Constants.INDEX_TYPE,
-                    id, map, vergProperties.getElasticDepartmenttypeJsonPath());
+            esUtilService.updateDocument(Constants.ORGTYPE_INDEX_NAME, Constants.INDEX_TYPE,
+                    id, map, vergProperties.getElasticOrgtypeJsonPath());
             cacheService.putCache(id, jsonNode);
-            map.put(Constants.DEPARTMENTTYPE_ID_RQST, id);
+            map.put(Constants.ORGTYPE_ID_RQST, id);
             response.setResult(map);
             response.setMessage(Constants.SUCCESSFULLY_UPDATED);
             response.setResponseCode(HttpStatus.OK);
             // auditLogService.logAudit(id, AUDIT_ENTITY_NAME, operation, targetStatus,
-            //         departmenttypeEntity1.getData(), departmenttypeEntity1.getData(),
-            //         departmenttypeEntity1.getCreatedOn(), departmenttypeEntity1.getUpdatedOn());
+            //         orgtypeEntity1.getData(), orgtypeEntity1.getData(),
+            //         orgtypeEntity1.getCreatedOn(), orgtypeEntity1.getUpdatedOn());
             return response;
         } catch (Exception e) {
             throw new CustomException("error while processing", e.getMessage(),
@@ -635,7 +635,7 @@ public class DepartmenttypeServiceImpl implements DepartmenttypeService {
     /**
      * Builds the projection stored in Elasticsearch and Redis (and returned by read): the payload
      * plus the lifecycle status and the Postgres createdOn/updatedOn timestamps (ISO-8601). ES keeps
-     * only whitelisted keys, so status/createdOn/updatedOn must be present in esDepartmenttypeRequiredFields.json.
+     * only whitelisted keys, so status/createdOn/updatedOn must be present in esOrgtypeRequiredFields.json.
      */
     private ObjectNode buildDocument(JsonNode data, String status, Timestamp createdOn, Timestamp updatedOn) {
         ObjectNode node = objectMapper.createObjectNode();

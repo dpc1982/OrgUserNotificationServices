@@ -38,13 +38,13 @@
       "type": "string",
       "description": "Organisation id this user belongs to (org catalogue reference)"
     },
-    "departmentName": {
+    "orgName": {
       "type": "string",
-      "description": "Department the user belongs to, e.g. Horticulture, Soil Science, Plant Pathology"
+      "description": "Display name of the organisation referenced by orgId"
     },
-    "entityType": {
+    "functionalRole": {
       "type": "string",
-      "description": "User category; free string validated against the shared reference list at the caller layer"
+      "description": "Functional role assigned to the user for the referenced organisation/catalogue"
     },
     "password": {
       "type": "string",
@@ -54,31 +54,52 @@
       "type": "string",
       "description": "Hashed PIN (hashed by the portal backend before submission; source of truth)"
     },
-    "passwordExpiresOn": {
+    "location0Id": {
       "type": "string",
-      "description": "RFC 3339 date-time the password expires; UTC offset is mandatory (e.g. 2026-08-19T10:15:30Z)",
-      "format": "date-time"
+      "description": "Identifier for the top-level (level 0) node of the location hierarchy"
     },
-    "pinExpiresOn": {
+    "location0Name": {
       "type": "string",
-      "description": "RFC 3339 date-time the PIN expires; UTC offset is mandatory (e.g. 2026-08-19T10:15:30Z)",
-      "format": "date-time"
+      "description": "Display name for the top-level (level 0) node of the location hierarchy"
     },
-    "region": {
+    "location1Id": {
       "type": "string",
-      "description": "ADDED (from Add User UI 'Coverage Selection'). Region the user's coverage area belongs to -- top level of the Ethiopia location hierarchy (Region > Zone > Woreda > Kebele). ASSUMPTION: stored as the selected region name/value from the Location Hierarchy master; switch to a regionId catalogue reference if that master exposes ids."
+      "description": "Identifier for the level 1 node of the location hierarchy, nested under location0"
     },
-    "zone": {
+    "location1Name": {
       "type": "string",
-      "description": "ADDED (from Add User UI 'Coverage Selection'). Zone within the selected region, second level of the location hierarchy. Depends on region."
+      "description": "Display name for the level 1 node of the location hierarchy"
     },
-    "woreda": {
+    "location2Id": {
       "type": "string",
-      "description": "ADDED (from Add User UI 'Coverage Selection'). Woreda within the selected zone, third level of the location hierarchy. Depends on zone."
+      "description": "Identifier for the level 2 node of the location hierarchy, nested under location1"
     },
-    "kebele": {
+    "location2Name": {
       "type": "string",
-      "description": "ADDED (from Add User UI 'Coverage Selection'). Kebele within the selected woreda, most granular level of the location hierarchy. Depends on woreda."
+      "description": "Display name for the level 2 node of the location hierarchy"
+    },
+    "location3Id": {
+      "type": "string",
+      "description": "Identifier for the level 3 node of the location hierarchy, nested under location2"
+    },
+    "location3Name": {
+      "type": "string",
+      "description": "Display name for the level 3 node of the location hierarchy"
+    },
+    "location4Id": {
+      "type": "string",
+      "description": "Identifier for the level 4 node of the location hierarchy, nested under location3"
+    },
+    "location4Name": {
+      "type": "string",
+      "description": "Display name for the level 4 node of the location hierarchy"
+    },
+    "displayName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional display label for the user's functional role (e.g. 'FIELD_OFFICER'). Nullable"
     },
     "createdBy": {
       "type": "string",
@@ -87,40 +108,6 @@
     "updatedBy": {
       "type": "string",
       "description": "User id of the last updater (set by the portal/auth layer)"
-    },
-    "registry": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "catalogueId": {
-            "type": "string",
-            "description": "Reference to the catalogue this functional role is granted on (catalogue catalogue reference, e.g. cat-001)."
-          },
-          "functionalRoleId": {
-            "type": "string",
-            "enum": [
-              "maker",
-              "checker1",
-              "checker2"
-            ],
-            "description": "Fixed functional role for this catalogue. ASSUMPTION: enum values taken literally from the sample payload provided (maker/checker1/checker2). If this is meant to line up with the canonical MAKER/APPROVAL_L1/APPROVAL_L2 codes used elsewhere in this project's functionalRoleAssignment entity, confirm whether these should be the same three values under different casing/naming, or are genuinely a separate, simpler enum scoped only to this embedded registry array."
-          },
-          "displayName": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional display label for this specific catalogue/role grant (e.g. 'FIELD_OFFICER'). Nullable -- sample payload shows null for checker1/checker2 entries, only the maker entry has a value."
-          }
-        },
-        "required": [
-          "catalogueId",
-          "functionalRoleId"
-        ],
-        "additionalProperties": false
-      },
-      "description": "ADDED. List of catalogue/functional-role grants for this user, embedded directly on the user record (one entry per catalogue the user has a functional role on). A user may hold roles on multiple catalogues at once, e.g. maker on one catalogue and checker1/checker2 on others."
     }
   },
   "required": [
@@ -128,7 +115,7 @@
     "lastName",
     "email",
     "orgId",
-    "entityType",
+    "functionalRole",
     "password",
     "pin"
   ]

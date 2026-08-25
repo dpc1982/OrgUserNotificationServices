@@ -1,0 +1,20 @@
+{
+    "orgtypeId": {
+        "type": "keyword"
+    },
+    "orgType": {
+    "type": "keyword"
+    },
+    "orgName": {
+    "type": "keyword"
+    },
+    "status": {
+        "type": "keyword"
+    },
+    "createdOn": {
+        "type": "date"
+    },
+    "updatedOn": {
+        "type": "date"
+    }
+}

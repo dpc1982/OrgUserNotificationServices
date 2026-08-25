@@ -9,12 +9,12 @@
             "keyLength": 12,
             "description": "Auto-generated primary key for the organisation (org-<random digits>)"
         },
-        "name": {
+        "orgName": {
             "type": "string",
-            "description": "Organisation name"
+            "description": "department name"
         },
 
-        "department_type": {
+        "orgTypeId": {
             "type": "string",
             "description": "Department, e.g. Horticulture, Soil Science, Plant Pathology"
         },
@@ -37,7 +37,7 @@
         }
     },
     "required": [
-        "name",
-        "type"
+        "orgName",
+        "orgTypeId"
     ]
 }

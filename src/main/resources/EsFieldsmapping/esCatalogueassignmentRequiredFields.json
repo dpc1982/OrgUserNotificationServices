@@ -2,7 +2,7 @@
   "catalogueAssignmentId": {
     "type": "keyword"
   },
-  "departmentId": {
+  "orgId": {
     "type": "keyword"
   },
   "catalogueId": {
@@ -10,12 +10,6 @@
   },
   "status": {
     "type": "keyword"
-  },
-  "assignedOn": {
-    "type": "date"
-  },
-  "removedOn": {
-    "type": "date"
   },
   "createdOn": {
     "type": "date"

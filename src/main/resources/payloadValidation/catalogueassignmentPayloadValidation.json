@@ -10,40 +10,21 @@
       "readOnly": true,
       "description": "System primary key, framework convention."
     },
-    "departmentId": {
+    "orgId": {
       "type": "string",
-      "description": "Reference to the assigned department."
+      "description": "Reference to the assigned Organization."
     },
     "catalogueId": {
       "type": "string",
       "description": "Reference to the assigned catalogue."
     },
-    "status": {
+    "catalogueName": {
       "type": "string",
-      "enum": [
-        "Active",
-        "Removed"
-      ],
-      "description": "INFERRED, no explicit PRD lifecycle table for this entity (see earlier notes)."
-    },
-    "assignedOn": {
-      "type": "string",
-      "format": "date-time"
-    },
-    "removedOn": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "format": "date-time"
+      "description": "Reference name to the assigned catalogue."
     }
   },
   "required": [
-    "departmentId",
+    "orgId",
     "catalogueId"
-  ],
-  "additionalProperties": false,
-  "notes": [
-    "Field names updated from departmentCode/catalogueCode to departmentId/catalogueId to match the corrected reference convention."
   ]
 }

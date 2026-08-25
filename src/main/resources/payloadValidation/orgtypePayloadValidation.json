@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "orgtypeId": {
+      "type": "string",
+      "prefix": "orgtype-",
+      "key": "Primary",
+      "keyLength": 12,
+      "description": "description about orgtypeId"
+    }
+  },
+  "orgType": {
+    "type": "string",
+    "description": "Origanization Type name, such as Agricultural, Seed Production, Research, Distribution, or Processing."
+  },
+  "orgName": {
+    "type": "string",
+    "description": "Name of the Origanization associated with this Origanization Type."
+  },
+  "required": [
+    "orgType",
+    "orgName"
+  ]
+}

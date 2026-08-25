@@ -1,16 +1,13 @@
 {
-    "name": {
+    "orgName": {
         "type": "keyword"
     },
-    "type": {
+    "orgTypeId": {
         "type": "keyword"
     },
     "location": {
         "type": "keyword"
     },
-    "department_type": {
-        "type": "string"
-  },
     "address": {
         "type": "keyword"
     },

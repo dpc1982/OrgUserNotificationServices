@@ -115,10 +115,10 @@ public class Constants{
     public static final String CATALOGUEASSIGNMENT_INDEX_NAME = "catalogueassignment_index";
 
     
-    // Departmenttype Specific Constants
-    public static final String DEPARTMENTTYPE_VALIDATION_FILE_JSON = "/payloadValidation/departmenttypePayloadValidation.json";
-    public static final String DEPARTMENTTYPE_ID_RQST = "departmenttypeId";
-    public static final String DEPARTMENTTYPE_INDEX_NAME = "departmenttype_index";
+    // Orgtype Specific Constants
+    public static final String ORGTYPE_VALIDATION_FILE_JSON = "/payloadValidation/orgtypePayloadValidation.json";
+    public static final String ORGTYPE_ID_RQST = "orgtypeId";
+    public static final String ORGTYPE_INDEX_NAME = "orgtype_index";
 
         private Constants() {
     }

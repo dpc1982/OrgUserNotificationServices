@@ -2,9 +2,6 @@
   "catalogueId": {
     "type": "keyword"
   },
-  "catalogueCode": {
-    "type": "keyword"
-  },
   "name": {
     "type": "keyword"
   },
@@ -16,9 +13,6 @@
   },
   "approvalWorkflow": {
     "type": "keyword"
-  },
-  "active": {
-    "type": "boolean"
   },
   "status": {
     "type": "keyword"
