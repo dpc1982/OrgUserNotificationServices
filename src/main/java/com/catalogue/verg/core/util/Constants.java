@@ -114,6 +114,12 @@ public class Constants{
     public static final String CATALOGUEASSIGNMENT_ID_RQST = "catalogueassignmentId";
     public static final String CATALOGUEASSIGNMENT_INDEX_NAME = "catalogueassignment_index";
 
+    
+    // Departmenttype Specific Constants
+    public static final String DEPARTMENTTYPE_VALIDATION_FILE_JSON = "/payloadValidation/departmenttypePayloadValidation.json";
+    public static final String DEPARTMENTTYPE_ID_RQST = "departmenttypeId";
+    public static final String DEPARTMENTTYPE_INDEX_NAME = "departmenttype_index";
+
         private Constants() {
     }
 }
