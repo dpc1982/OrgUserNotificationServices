@@ -24,7 +24,6 @@
     }
   },
   "required": [
-    "departmentCode",
     "departmentType",
     "departmentName"
   ],
