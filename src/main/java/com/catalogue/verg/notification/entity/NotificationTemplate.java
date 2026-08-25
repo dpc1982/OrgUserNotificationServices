@@ -31,6 +31,8 @@ public class NotificationTemplate {
     private String notificationChannel;
     @Column(name = "subject", length = 500)
     private String subject;
+    @Column(name = "receiver", length = 100)
+    private String receiver;
     @Column(name = "status", length = 100)
     private String status;
     @Column(name = "template_content", nullable = false, length = 10000)
