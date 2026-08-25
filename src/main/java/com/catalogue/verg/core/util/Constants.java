@@ -103,12 +103,6 @@ public class Constants{
     public static final String ORG_INDEX_NAME = "org_index";
 
     
-    // Department Specific Constants
-    public static final String DEPARTMENT_VALIDATION_FILE_JSON = "/payloadValidation/departmentPayloadValidation.json";
-    public static final String DEPARTMENT_ID_RQST = "departmentId";
-    public static final String DEPARTMENT_INDEX_NAME = "department_index";
-
-    
     // Catalogue Specific Constants
     public static final String CATALOGUE_VALIDATION_FILE_JSON = "/payloadValidation/cataloguePayloadValidation.json";
     public static final String CATALOGUE_ID_RQST = "catalogueId";
