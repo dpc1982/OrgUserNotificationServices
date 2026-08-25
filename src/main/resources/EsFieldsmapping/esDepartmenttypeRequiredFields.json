@@ -2,9 +2,6 @@
   "departmentTypeId": {
     "type": "keyword"
   },
-  "departmentCode": {
-    "type": "keyword"
-  },
   "departmentType": {
     "type": "keyword"
   },
