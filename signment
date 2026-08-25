@@ -1,0 +1,25 @@
+ .../catalogue/controller/CatalogueController.java  | 118 [32m++++[m
+ .../verg/catalogue/entity/CatalogueEntity.java     |  37 [32m++[m
+ .../catalogue/repository/CatalogueRepository.java  |   8 [32m+[m
+ .../verg/catalogue/service/CatalogueService.java   |  43 [32m++[m
+ .../service/impl/CatalogueServiceImpl.java         | 681 [32m+++++++++++++++++++++[m
+ .../controller/CatalogueassignmentController.java  | 118 [32m++++[m
+ .../entity/CatalogueassignmentEntity.java          |  37 [32m++[m
+ .../repository/CatalogueassignmentRepository.java  |   8 [32m+[m
+ .../service/CatalogueassignmentService.java        |  43 [32m++[m
+ .../impl/CatalogueassignmentServiceImpl.java       | 681 [32m+++++++++++++++++++++[m
+ .../com/catalogue/verg/core/util/Constants.java    |  18 [32m+[m
+ .../catalogue/verg/core/util/VergProperties.java   |   9 [32m+[m
+ .../controller/DepartmentController.java           | 118 [32m++++[m
+ .../verg/department/entity/DepartmentEntity.java   |  37 [32m++[m
+ .../repository/DepartmentRepository.java           |   8 [32m+[m
+ .../verg/department/service/DepartmentService.java |  43 [32m++[m
+ .../service/impl/DepartmentServiceImpl.java        | 681 [32m+++++++++++++++++++++[m
+ .../EsFieldsmapping/esCatalogueRequiredFields.json |  32 [32m+[m
+ .../esCatalogueassignmentRequiredFields.json       |  26 [32m+[m
+ .../esDepartmentRequiredFields.json                |  32 [32m+[m
+ src/main/resources/application.properties          |   6 [32m+[m
+ .../cataloguePayloadValidation.json                |  74 [32m+++[m
+ .../catalogueassignmentPayloadValidation.json      |  49 [32m++[m
+ .../departmentPayloadValidation.json               |  93 [32m+++[m
+ 24 files changed, 3000 insertions(+)
