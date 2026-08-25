@@ -13,6 +13,7 @@ public class NotificationTemplateRequest {
     private JsonNode templateVariables;
     private String description;
     private String status;
+    private String receiver;
 
     public String getTemplateCode() {
         return templateCode;
@@ -84,5 +85,13 @@ public class NotificationTemplateRequest {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 }

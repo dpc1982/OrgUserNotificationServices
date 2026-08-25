@@ -81,6 +81,9 @@ public class NotificationTemplateService {
         template.setStatus(
                 request.getStatus()
         );
+        template.setReceiver(
+                request.getReceiver()
+        );
 
         template.setIsEnabled(true);
         template.setIsDeleted(false);
@@ -192,6 +195,10 @@ public class NotificationTemplateService {
 
         template.setStatus(
                 request.getStatus()
+        );
+
+        template.setReceiver(
+                request.getReceiver()
         );
 
         NotificationTemplate updatedTemplate =
