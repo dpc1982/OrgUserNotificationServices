@@ -2,10 +2,7 @@
     "orgtypeId": {
         "type": "keyword"
     },
-    "orgType": {
-    "type": "keyword"
-    },
-    "orgName": {
+    "orgtypeName": {
     "type": "keyword"
     },
     "status": {
