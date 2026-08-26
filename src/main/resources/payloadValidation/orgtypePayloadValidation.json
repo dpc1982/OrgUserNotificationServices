@@ -10,11 +10,7 @@
       "description": "description about orgtypeId"
     }
   },
-  "orgType": {
-    "type": "string",
-    "description": "Origanization Type name, such as Agricultural, Seed Production, Research, Distribution, or Processing."
-  },
-  "orgName": {
+  "orgtypeName": {
     "type": "string",
     "description": "Name of the Origanization associated with this Origanization Type."
   },
